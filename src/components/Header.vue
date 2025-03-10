@@ -21,18 +21,20 @@
           />
         </div>
       </template>
-      <el-menu-item index="1-1">item one</el-menu-item>
+      <el-menu-item index="1-1" @click="logout">Logout</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
 
 <script lang="ts" setup>
+import { useAuthStore } from "@/stores/counter";
 import { ref } from "vue";
-
+const {logout}=useAuthStore();
 const activeIndex = ref("1");
 const handleSelect = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
+
 </script>
 
 <style scoped>

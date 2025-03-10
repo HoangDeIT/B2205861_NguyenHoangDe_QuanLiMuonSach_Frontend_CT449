@@ -11,14 +11,18 @@
         @close="handleClose"
         style="height: 100vh"
       >
-        <el-menu-item class="el-menu-item">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
-        <el-menu-item class="el-menu-item">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
+        <router-link to="/" class="link">
+          <el-menu-item class="el-menu-item">
+            <el-icon><setting /></el-icon>
+            <span>Manage Staff</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="/book" class="link">
+          <el-menu-item class="el-menu-item">
+            <el-icon><setting /></el-icon>
+            <span>Manage Reader</span>
+          </el-menu-item>
+        </router-link>
         <el-menu-item class="el-menu-item">
           <el-icon><setting /></el-icon>
           <span>Navigator Four</span>
@@ -51,5 +55,11 @@ const handleClose = (key: string, keyPath: string[]) => {
   border: 1px solid #9ea2ac;
   margin: 15px;
   border-radius: 10px;
+
+  color: black;
+  text-decoration-line: none;
+}
+.link {
+  text-decoration: none !important;
 }
 </style>
