@@ -14,23 +14,33 @@
         <router-link to="/" class="link">
           <el-menu-item class="el-menu-item">
             <el-icon><setting /></el-icon>
-            <span>Manage Staff</span>
+            <span>Quan li nhan vien</span>
           </el-menu-item>
         </router-link>
-        <router-link to="/book" class="link">
+        <router-link to="/sach" class="link">
           <el-menu-item class="el-menu-item">
             <el-icon><setting /></el-icon>
-            <span>Manage Reader</span>
+            <span>Quan li sach</span>
           </el-menu-item>
         </router-link>
-        <el-menu-item class="el-menu-item">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
-        <el-menu-item class="el-menu-item">
-          <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
-        </el-menu-item>
+        <router-link to="/doc-gia" class="link">
+          <el-menu-item class="el-menu-item">
+            <el-icon><setting /></el-icon>
+            <span>Quan li doc gia</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="/nxb" class="link">
+          <el-menu-item class="el-menu-item">
+            <el-icon><setting /></el-icon>
+            <span>Quan li nha xuat ban</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="/theo-doi-muon-sach" class="link">
+          <el-menu-item class="el-menu-item">
+            <el-icon><setting /></el-icon>
+            <span>Quan li theo doi muon sach</span>
+          </el-menu-item>
+        </router-link>
       </el-menu>
     </el-col>
   </el-row>

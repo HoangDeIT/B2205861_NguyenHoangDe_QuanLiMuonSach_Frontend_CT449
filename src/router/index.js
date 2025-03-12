@@ -4,7 +4,10 @@ import DefaultLayout from '@/layout/DefaultLayout.vue'
 import ManageStaff from '@/views/ManageStaff.vue'
 import Auth from '@/views/Auth.vue'
 import { useAuthStore } from '@/stores/counter'
-import ManageReader from '@/views/ManageReader.vue'
+import ManageReader from '@/views/ManageDocGia.vue'
+import ManageNhaXuatBan from '@/views/ManageNhaXuatBan.vue'
+import ManageSach from '@/views/ManageSach.vue'
+import ManageTheoDoiMuonSach from '@/views/ManageTheoDoiMuonSach.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,8 +23,20 @@ const router = createRouter({
           component: ManageStaff
         },
         {
-          path: '/reader',
+          path: '/doc-gia',
           component: ManageReader
+        },
+        {
+          path: '/nxb',
+          component: ManageNhaXuatBan
+        },
+        {
+          path: '/sach',
+          component: ManageSach
+        },
+        {
+          path: '/theo-doi-muon-sach',
+          component: ManageTheoDoiMuonSach
         },
       ]
     }, {
