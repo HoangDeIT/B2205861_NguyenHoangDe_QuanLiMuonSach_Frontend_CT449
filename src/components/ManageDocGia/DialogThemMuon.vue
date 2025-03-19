@@ -75,7 +75,7 @@ watchEffect(() => {
 const selectedSach = ref("");
 const fetchSach = async () => {
   const res = await sachService.getAllNoPagination();
-  console.log(res.data);
+  console.log(res);
   sachs.value = res;
 };
 onMounted(fetchSach);
@@ -114,6 +114,7 @@ function submitForm(formEl: FormInstance | undefined) {
     if (valid) {
       console.log(ruleForm);
       await theoDoiMuonSachService.create(ruleForm);
+      fetchSach();
       handleClose();
     }
   });

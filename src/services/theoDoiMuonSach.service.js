@@ -5,8 +5,8 @@ class TheoDoiMuonSachService {
         this.api = createApiClient("/api/v1/muon");
     }
 
-    async getAll(page, limit, search) {
-        const res = await this.api.get("/", { params: { page, limit, search } });
+    async getAll(page, limit, isTra) {
+        const res = await this.api.get("/", { params: { page, limit, isTra } });
         return res.data;
     }
 
@@ -26,6 +26,10 @@ class TheoDoiMuonSachService {
     }
     async getDocGiaById(id) {
         const res = await this.api.get(`/${id}`);
+        return res.data;
+    }
+    async postTraSach(id) {
+        const res = await this.api.post(`/${id}`);
         return res.data;
     }
 }

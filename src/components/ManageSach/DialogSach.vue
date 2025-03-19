@@ -24,7 +24,7 @@
       </el-form-item>
 
       <el-form-item label="Số quyển" prop="SOQUYEN">
-        <el-input v-model="ruleForm.SOQUYEN" />
+        <el-input type="number" v-model="ruleForm.SOQUYEN" />
       </el-form-item>
 
       <el-form-item label="Năm XB" prop="NAMXUATBAN">
@@ -45,7 +45,25 @@
         />
       </el-form-item>
     </el-form>
+    <el-upload
+      class="avatar-uploader"
+      action="http://localhost:3000/api/v1/uploads/sach"
+      :show-file-list="false"
+      :on-success="handleAvatarSuccess"
+      :before-upload="beforeAvatarUpload"
+      name="image"
+    >
+      <img
+        v-if="imageUrl"
+        :src="`http://localhost:3000/images/${imageUrl}`"
+        class="avatar"
+        @click="removeImage"
+      />
 
+      <el-icon v-else class="avatar-uploader-icon"
+        ><Plus /> Upload image</el-icon
+      >
+    </el-upload>
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
@@ -59,9 +77,11 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import nhaXuatBanService from "@/services/nhaXuatBan.service";
 import { da } from "element-plus/es/locale";
+import type { UploadProps } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
 
 const props = defineProps({
   dialogFormVisible: Boolean,
@@ -72,11 +92,13 @@ const emit = defineEmits(["closeDialog", "created", "updated"]);
 const selectedNXB = ref(""); // Hiển thị tên NXB
 const danhSachNXB = ref([]); // Lưu danh sách NXB
 const ruleFormRef = ref<FormInstance>();
+const imageUrl = ref("");
+
 const ruleForm = reactive({
   _id: "",
   TENSACH: "",
   DONGIA: "",
-  SOQUYEN: "",
+  SOQUYEN: 1,
   NAMXUATBAN: "",
   MANXB: "",
   NGUONGOC_TACGIA: "",
@@ -102,7 +124,9 @@ watchEffect(() => {
     ruleForm.NAMXUATBAN = props.sach.NAMXUATBAN || "";
     ruleForm.MANXB = props.sach.MANXB || "";
     ruleForm.NGUONGOC_TACGIA = props.sach.NGUONGOC_TACGIA || "";
-
+    if (props.sach.IMAGEURL.length > 0)
+      imageUrl.value = props?.sach?.IMAGEURL || "";
+    else imageUrl.value = null;
     // Kiểm tra khi props.dialogFormVisible thay đổi
     if (props.dialogFormVisible) {
       // Nếu dialogFormVisible thay đổi, bạn có thể thực hiện các hành động khác ở đây nếu cần.
@@ -148,10 +172,71 @@ function submitForm(formEl: FormInstance | undefined) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      if (ruleForm._id) emit("updated", { ...ruleForm });
-      else emit("created", { ...ruleForm });
+      if (ruleForm._id)
+        emit("updated", { ...ruleForm, IMAGEURL: imageUrl.value });
+      else emit("created", { ...ruleForm, IMAGEURL: imageUrl.value });
       handleClose();
     }
   });
 }
+
+//img
+const handleAvatarSuccess: UploadProps["onSuccess"] = (
+  response,
+  uploadFile
+) => {
+  imageUrl.value = response.imageUrl;
+};
+const removeImage = () => {
+  imageUrl.value = "";
+};
+const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
+  if (
+    rawFile.type !== "image/jpeg" &&
+    rawFile.type !== "image/jpg" &&
+    rawFile.type !== "image/png"
+  ) {
+    ElMessage.error("Avatar picture must be JPG or PNG format!");
+    return false;
+  } else if (rawFile.size / 1024 / 1024 > 2) {
+    ElMessage.error("Avatar picture size can not exceed 2MB!");
+    return false;
+  }
+  return true;
+};
 </script>
+<style scoped>
+.avatar-uploader {
+  display: flex;
+  justify-content: center;
+  border: 1px solid #9ea2ac;
+  padding: 5px;
+}
+.avatar-uploader .avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
+}
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
+</style>
+
