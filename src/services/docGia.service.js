@@ -17,7 +17,7 @@ class DocGiaService {
     }
 
     async update(data) {
-        const res = await this.api.put("/", data);
+        const res = await this.api.patch("/", data);
         return res.data;
     }
 
@@ -30,11 +30,11 @@ class DocGiaService {
         return res.data
     }
     async updateByUser(data) {
-        const res = await this.api.put("/user", data)
+        const res = await this.api.patch("/user", data)
         return res.data
     }
     async changePassword(data) {
-        const res = await this.api.put("/user/change-password", data)
+        const res = await this.api.patch("/user/change-password", data)
         return res.data
     }
 }

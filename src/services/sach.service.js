@@ -23,7 +23,7 @@ class SachService {
         if (data.DONGIA) {
             data.DONGIA = parseInt(data.DONGIA)
         }
-        const res = await this.api.put("/", data);
+        const res = await this.api.patch("/", data);
         return res.data;
     }
 

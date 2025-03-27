@@ -16,7 +16,7 @@ class TheoDoiMuonSachService {
     }
 
     async update(data) {
-        const res = await this.api.put("/", data);
+        const res = await this.api.patch("/", data);
         return res.data;
     }
 

@@ -23,7 +23,7 @@ class StaffService {
         return (await this.api.get(`/${id}`)).data;
     }
     async update(data) {
-        return (await this.api.put(`/`, data)).data;
+        return (await this.api.patch(`/`, data)).data;
     }
     async delete(id) {
         return (await this.api.delete(`/${id}`)).data;
