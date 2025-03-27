@@ -47,21 +47,13 @@
       <el-form-item label="Điện thoại" prop="DIENTHOAI">
         <el-input v-model="ruleForm.DIENTHOAI" />
       </el-form-item>
-
-      <el-form-item label="Mật khẩu" prop="Password">
-        <el-input
-          v-model="ruleForm.Password"
-          type="password"
-          autocomplete="off"
-        />
-      </el-form-item>
     </el-form>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">Cancel</el-button>
+        <el-button @click="emit('closeDialog')">Cancel</el-button>
         <el-button type="primary" @click="submitForm(ruleFormRef)"
-          >Confirm</el-button
+          >Updated</el-button
         >
       </div>
     </template>
@@ -70,14 +62,24 @@
 
 <script lang="ts" setup>
 import { reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
+import {
+  ElNotification,
+  type FormInstance,
+  type FormRules,
+} from "element-plus";
+import docGiaService from "@/services/docGia.service";
 
 const props = defineProps({
   dialogFormVisible: Boolean,
-  docGia: { type: Object, default: {} },
 });
-
-const emit = defineEmits(["closeDialog", "created", "updated"]);
+const open1 = () => {
+  ElNotification({
+    title: "Success",
+    message: "This is a success message",
+    type: "success",
+  });
+};
+const emit = defineEmits(["closeDialog"]);
 
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
@@ -88,43 +90,36 @@ const ruleForm = reactive({
   PHAI: "",
   DIACHI: "",
   DIENTHOAI: "",
-  Password: "",
   MADOCGIA: "",
 });
 const resetForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.resetFields();
 };
+const fetchData = async () => {
+  const res = await docGiaService.getByProfileUser();
+  if (res._id) {
+    ruleForm._id = res._id ?? "";
+    ruleForm.HOLOT = res.HOLOT ?? "";
+    ruleForm.TEN = res.TEN ?? "";
+    ruleForm.NGAYSINH = res.NGAYSINH ?? "";
+    ruleForm.PHAI = res.PHAI ?? "";
+    ruleForm.DIACHI = res.DIACHI ?? "";
+    ruleForm.DIENTHOAI = res.DIENTHOAI ?? "";
+    ruleForm.MADOCGIA = res.MADOCGIA ?? "";
+  }
+};
+watchEffect(() => {
+  if (props.dialogFormVisible) {
+    fetchData();
+  }
+});
+
 const rules = reactive<FormRules<typeof ruleForm>>({
   HOLOT: [{ required: true, message: "Vui lòng nhập Họ lót", trigger: "blur" }],
   TEN: [{ required: true, message: "Vui lòng nhập Tên", trigger: "blur" }],
   DIENTHOAI: [{ required: true, message: "Vui lòng nhập ĐT", trigger: "blur" }],
-
   // ... Thêm các rule khác nếu cần
-});
-
-watchEffect(() => {
-  if (props.docGia) {
-    console.log(props.docGia);
-    ruleForm._id = props.docGia._id ?? "";
-    ruleForm.HOLOT = props.docGia.HOLOT ?? "";
-    ruleForm.TEN = props.docGia.TEN ?? "";
-    ruleForm.NGAYSINH = props.docGia.NGAYSINH ?? "";
-    ruleForm.PHAI = props.docGia.PHAI ?? "";
-    ruleForm.DIACHI = props.docGia.DIACHI ?? "";
-    ruleForm.DIENTHOAI = props.docGia.DIENTHOAI ?? "";
-    ruleForm.MADOCGIA = props.docGia.MADOCGIA ?? "";
-    ruleForm.Password = "";
-  }
-  if (props.dialogFormVisible) {
-    rules.Password = [
-      {
-        required: ruleForm._id === "",
-        message: "Vui nhập mật khẩu",
-        trigger: "blur",
-      },
-    ];
-  }
 });
 
 function handleClose() {
@@ -134,11 +129,20 @@ function handleClose() {
 
 function submitForm(formEl: FormInstance | undefined) {
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      if (ruleForm._id) emit("updated", { ...ruleForm });
-      else emit("created", { ...ruleForm });
-      handleClose();
+      try {
+        const res = await docGiaService.updateByUser(ruleForm);
+        handleClose();
+        if (!res.message) {
+          open1();
+        }
+      } catch (error) {
+        ElNotification.error({
+          title: "Error",
+          message: error.response?.data?.message || "An error occurred",
+        });
+      }
     }
   });
 }

@@ -32,6 +32,14 @@ class TheoDoiMuonSachService {
         const res = await this.api.post(`/${id}`);
         return res.data;
     }
+    async MuonSachByUser(MASACH) {
+        const res = await this.api.post("/user", { MASACH })
+        return res.data
+    }
+    async chiTietMuonSachByUser() {
+        const res = await this.api.get("/user")
+        return res.data
+    }
 }
 
 export default new TheoDoiMuonSachService();

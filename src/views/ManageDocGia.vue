@@ -16,6 +16,7 @@
   </el-input>
 
   <el-table :data="data.value" border style="width: 100%">
+    <el-table-column prop="MADOCGIA" label="Mã độc giả" width="80" />
     <el-table-column prop="HOLOT" label="Họ Lót" width="120" />
     <el-table-column prop="TEN" label="Tên" width="120" />
     <el-table-column prop="NGAYSINH" label="Ngày Sinh" width="150" />
@@ -100,6 +101,7 @@ import DialogDocGia from "@/components/ManageDocGia/DialogDocGia.vue";
 import DocGiaService from "@/services/docGia.service";
 import DialogThemMuon from "@/components/ManageDocGia/DialogThemMuon.vue";
 import DialogChiTietMuon from "@/components/ManageDocGia/DialogChiTietMuon.vue";
+import { ElMessage } from "element-plus";
 
 const data = reactive({ value: [] });
 const total = ref(0);
@@ -125,7 +127,7 @@ watch(search, () => {
 });
 const handleOpenDialogXemChiTiet = (row) => {
   dialogFormVisibleChiTietMuon.value = true;
-  idDocGiaChiTietMuon.value = row._id;
+  idDocGiaChiTietMuon.value = row.MADOCGIA;
 };
 const handleOpenDialogThemMuon = (row) => {
   console.log(row);
@@ -156,18 +158,33 @@ function handleOpenUpdate(row) {
 }
 
 async function handleCreate(payload) {
-  await DocGiaService.create(payload);
-  fetchData();
+  try {
+    await DocGiaService.create(payload);
+    fetchData();
+    ElMessage.success("Tạo thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Lỗi tạo thất bại");
+  }
 }
 
 async function handleUpdate(payload) {
-  await DocGiaService.update(payload);
-  fetchData();
+  try {
+    await DocGiaService.update(payload);
+    fetchData();
+    ElMessage.success("Cập nhật thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Lỗi cập nhật thất bại");
+  }
 }
 
 async function handleDelete(row) {
-  await DocGiaService.delete(row._id);
-  fetchData();
+  try {
+    await DocGiaService.delete(row._id);
+    fetchData();
+    ElMessage.success("Xóa thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Lỗi xóa thất bại");
+  }
 }
 
 onMounted(fetchData);

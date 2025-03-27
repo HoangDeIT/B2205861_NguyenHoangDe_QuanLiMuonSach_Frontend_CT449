@@ -17,6 +17,8 @@
   </div>
 
   <el-table :data="data.value" border style="width: 100%">
+    <el-table-column prop="MANXB" label="Mã NXB" width="80" />
+
     <el-table-column prop="TENNXB" label="Tên NXB" width="180" />
     <el-table-column prop="DIACHI" label="Địa Chỉ" />
 
@@ -71,6 +73,7 @@ import { reactive, ref, onMounted, watch } from "vue";
 import { Delete, Edit, Search } from "@element-plus/icons-vue";
 import DialogNhaXuatBan from "@/components/ManageNhaXuatBan/DialogNhaXuatBan.vue";
 import NhaXuatBanService from "@/services/nhaXuatBan.service";
+import { ElMessage } from "element-plus";
 
 const data = reactive({ value: [] });
 const total = ref(0);
@@ -116,18 +119,33 @@ function handleOpenUpdate(row) {
 }
 
 async function handleCreate(payload) {
-  await NhaXuatBanService.create(payload);
-  fetchData();
+  try {
+    await NhaXuatBanService.create(payload);
+    fetchData();
+    ElMessage.success("Tạo thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Thêm thất bại");
+  }
 }
 
 async function handleUpdate(payload) {
-  await NhaXuatBanService.update(payload);
-  fetchData();
+  try {
+    await NhaXuatBanService.update(payload);
+    fetchData();
+    ElMessage.success("Cập nhật thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Cập nhật thất bại");
+  }
 }
 
 async function handleDelete(row) {
-  await NhaXuatBanService.delete(row._id);
-  fetchData();
+  try {
+    await NhaXuatBanService.delete(row._id);
+    fetchData();
+    ElMessage.success("Xóa thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Xóa thất bại");
+  }
 }
 
 onMounted(fetchData);

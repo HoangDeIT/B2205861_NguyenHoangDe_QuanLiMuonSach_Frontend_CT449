@@ -11,7 +11,7 @@
       :rules="rules"
       label-width="auto"
     >
-      <el-form-item label="Mã Độc Giả">
+      <el-form-item label="Tên độc giả">
         <el-input
           disabled
           :value="props.docGia.HOLOT + ' ' + props.docGia.TEN"
@@ -34,6 +34,8 @@
           v-model="ruleForm.NGAYMUON"
           type="date"
           placeholder="Chọn ngày mượn"
+          format="DD/MM/YYYY"
+          value-format="DD/MM/YYYY"
         />
       </el-form-item>
     </el-form>
@@ -51,7 +53,7 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
+import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import sachService from "@/services/sach.service";
 import theoDoiMuonSachService from "@/services/theoDoiMuonSach.service";
 
@@ -70,7 +72,7 @@ const ruleForm = reactive({
 });
 const sachs = ref([]);
 watchEffect(() => {
-  ruleForm.MADOCGIA = props.docGia._id;
+  ruleForm.MADOCGIA = props.docGia.MADOCGIA;
 });
 const selectedSach = ref("");
 const fetchSach = async () => {
@@ -87,7 +89,7 @@ const querySearchSach = (queryString, cb) => {
     )
     .map((sach) => ({
       value: sach.TENSACH, // Hiển thị tên sách
-      MASACH: sach._id, // Lưu mã sách
+      MASACH: sach.MASACH, // Lưu mã sách
     }));
   cb(results);
 };
@@ -113,9 +115,15 @@ function submitForm(formEl: FormInstance | undefined) {
   formEl.validate(async (valid) => {
     if (valid) {
       console.log(ruleForm);
-      await theoDoiMuonSachService.create(ruleForm);
-      fetchSach();
-      handleClose();
+      try {
+        await theoDoiMuonSachService.create(ruleForm);
+        fetchSach();
+        ElMessage.success("Thêm thành công");
+
+        handleClose();
+      } catch (error) {
+        ElMessage.error(error.response.data.message || "Lỗi tạo thất bại");
+      }
     }
   });
 }

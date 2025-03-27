@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="props.dialogFormVisible"
-    title="Shipping address"
+    title="Nhân viên"
     width="500"
     @close="handleClose"
   >
@@ -14,9 +14,6 @@
       label-width="auto"
       class="demo-ruleForm"
     >
-      <el-form-item label="id" prop="_id" v-show="false">
-        <el-input v-model="ruleForm._id" autocomplete="off" />
-      </el-form-item>
       <el-form-item label="Họ Tên" prop="HoTenNV">
         <el-input v-model="ruleForm.HoTenNV" autocomplete="off" />
       </el-form-item>
@@ -45,7 +42,7 @@
       <div class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
         <el-button type="primary" @click="submitForm(ruleFormRef)">
-          Confirm
+          Lưu
         </el-button>
       </div>
     </template>
@@ -75,16 +72,8 @@ const ruleForm = reactive({
   DiaChi: "",
   SoDienThoai: "",
 });
-watchEffect(() => {
-  if (props.staff) {
-    ruleForm._id = props.staff._id;
-    ruleForm.HoTenNV = props.staff.HoTenNV;
-    ruleForm.Password = "";
-    ruleForm.ChucVu = props.staff.ChucVu;
-    ruleForm.DiaChi = props.staff.DiaChi;
-    ruleForm.SoDienThoai = props.staff.SoDienThoai;
-  }
-});
+
+let rules;
 const validatePhone = (rule, value, callback) => {
   const phoneRegex = /^0\d{9}$/;
   if (!value) {
@@ -95,26 +84,41 @@ const validatePhone = (rule, value, callback) => {
     callback();
   }
 };
-
-const rules = reactive<FormRules<typeof ruleForm>>({
-  HoTenNV: [
-    { required: true, message: "Vui lòng nhập họ tên", trigger: "blur" },
-  ],
-  Password: [
-    {
-      required: ruleForm._id == "",
-      message: "Vui lòng nhập mật khẩu",
-      trigger: "blur",
-    },
-  ],
-  ChucVu: [
-    { required: true, message: "Vui lòng chọn chức vụ", trigger: "change" },
-  ],
-  DiaChi: [
-    { required: true, message: "Vui lòng nhập địa chỉ", trigger: "blur" },
-  ],
-  SoDienThoai: [{ validator: validatePhone, trigger: "blur" }],
+watchEffect(() => {
+  if (props.staff) {
+    ruleForm._id = props.staff._id || "";
+    ruleForm.HoTenNV = props.staff.HoTenNV || "";
+    ruleForm.Password = "";
+    ruleForm.ChucVu = props.staff.ChucVu || "";
+    ruleForm.DiaChi = props.staff.DiaChi || "";
+    ruleForm.SoDienThoai = props.staff.SoDienThoai || "";
+  }
+  if (props.dialogFormVisible) {
+    //pass
+    // rules;
+  }
+  rules = reactive<FormRules<typeof ruleForm>>({
+    HoTenNV: [
+      { required: true, message: "Vui lòng nhập họ tên", trigger: "blur" },
+    ],
+    Password: [
+      {
+        required: ruleForm._id === "",
+        message: "Vui lòng nhập mật khẩu",
+        trigger: "blur",
+      },
+    ],
+    ChucVu: [
+      { required: true, message: "Vui lòng chọn chức vụ", trigger: "change" },
+    ],
+    DiaChi: [
+      { required: true, message: "Vui lòng nhập địa chỉ", trigger: "blur" },
+    ],
+    SoDienThoai: [{ validator: validatePhone, trigger: "blur" }],
+  });
+  console.log(">>>", ruleForm);
 });
+
 const handleClose = () => {
   emit("closeDialog");
   resetForm(ruleFormRef.value);
@@ -123,7 +127,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      if (ruleForm._id != "") emit("nhanVienCreated", ruleForm);
+      console.log(ruleForm._id !== "");
+      if (ruleForm._id === "") emit("nhanVienCreated", ruleForm);
       else emit("nhanVienUpdated", ruleForm);
       handleClose();
     }

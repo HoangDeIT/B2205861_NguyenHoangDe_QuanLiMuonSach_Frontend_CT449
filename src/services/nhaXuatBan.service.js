@@ -12,7 +12,10 @@ class NhaXuatBanService {
         });
         return res.data; // { data, total, totalPages, currentPage }
     }
-
+    async getAllNoPagination() {
+        const res = await this.api.get("/get-all");
+        return res.data; // { data, total, totalPages, currentPage }
+    }
     async create(data) {
         const res = await this.api.post("/", data);
         return res.data;

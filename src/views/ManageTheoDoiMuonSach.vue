@@ -1,9 +1,9 @@
 <template>
   <el-radio-group v-model="radio1" size="large">
-    <el-radio-button label="Chua tra" value="false" />
-    <el-radio-button label="Tra roi" value="true" />
+    <el-radio-button label="Chưa trả" :value="false" />
+    <el-radio-button label="Trả rồi" :value="true" />
   </el-radio-group>
-  <el-table :data="data.value" border style="width: 100%">
+  <el-table :data="data" border style="width: 100%">
     <el-table-column prop="NGAYMUON" label="Ngày mượn" />
     <el-table-column prop="NGAYTRA" label="Ngày trả">
       <template v-slot="scope">
@@ -31,11 +31,11 @@
 
         <el-popconfirm
           @confirm="handleTraSach(scope.row)"
-          title="Are you sure to delete this?"
+          title="Trả sách cho user này?"
         >
           <template #reference>
             <el-button type="primary" round v-if="!scope.row.NGAYTRA"
-              >Tra sach</el-button
+              >Trả sách</el-button
             >
           </template>
         </el-popconfirm>
@@ -67,8 +67,9 @@ import { reactive, ref, onMounted, watch, watchEffect } from "vue";
 import { Delete, Edit, Search } from "@element-plus/icons-vue";
 import DialogTheoDoiMuonSach from "@/components/ManageTheoDoiMuonSach/DialogTheoDoiMuonSach.vue";
 import TheoDoiMuonSachService from "@/services/theoDoiMuonSach.service";
+import { ElMessage } from "element-plus";
 
-const data = reactive({ value: [] });
+const data = ref([]);
 const total = ref(0);
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -99,36 +100,58 @@ async function fetchData() {
   total.value = res.total;
   totalPages.value = res.totalPages;
 }
-watchEffect;
-function handleOpenCreate() {
-  dialogFormVisible.value = true;
-  Object.keys(muonUpdate).forEach((key) => {
-    sachUpdate[key] = ""; // Hoặc giá trị mặc định bạn muốn
-  });
-}
+
+// function handleOpenCreate() {
+//   dialogFormVisible.value = true;
+//   Object.keys(muonUpdate).forEach((key) => {
+//     muonUpdate[key] = ""; // Hoặc giá trị mặc định bạn muốn
+//   });
+// }
 const handleTraSach = async (id) => {
-  await TheoDoiMuonSachService.postTraSach(id._id);
-  fetchData();
+  try {
+    await TheoDoiMuonSachService.postTraSach(id._id);
+    ElMessage.success("Trả sách thành công");
+    await fetchData();
+  } catch (error) {
+    ElMessage.error(error.response.data.message || "Lỗi trả sách thất bại");
+  }
 };
+
 function handleOpenUpdate(row) {
   dialogFormVisible.value = true;
   Object.assign(muonUpdate, row);
 }
 
 async function handleCreate(payload) {
-  await TheoDoiMuonSachService.create(payload);
-  fetchData();
+  try {
+    await TheoDoiMuonSachService.create(payload);
+    ElMessage.success("Tạo thành công");
+    fetchData();
+  } catch (error) {
+    ElMessage.error(error.response.data.message || "Lỗi tạo thất bại");
+  }
 }
 
 async function handleUpdate(payload) {
-  await TheoDoiMuonSachService.update(payload);
-  fetchData();
+  try {
+    await TheoDoiMuonSachService.update(payload);
+    ElMessage.success("Cập nhật thành công");
+    fetchData();
+  } catch (error) {
+    ElMessage.error(error.response.data.message || "Lỗi cập nhật thất bại");
+  }
 }
 
 async function handleDelete(row) {
-  await TheoDoiMuonSachService.delete(row._id);
-  fetchData();
+  try {
+    await TheoDoiMuonSachService.delete(row._id);
+    ElMessage.success("Xóa thành công");
+    fetchData();
+  } catch (error) {
+    ElMessage.error(error.response.data.message || "Lỗi xóa thất bại");
+  }
 }
 
 onMounted(fetchData);
 </script>
+

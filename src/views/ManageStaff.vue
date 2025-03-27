@@ -17,10 +17,11 @@
     </el-input>
   </div>
   <el-table :data="data.value" border style="width: 100%">
+    <el-table-column prop="MANV" label="MSNV" width="180" />
     <el-table-column prop="HoTenNV" label="Date" width="180" />
-    <el-table-column prop="ChucVu" label="Name" width="180" />
-    <el-table-column prop="DiaChi" label="Address" />
-    <el-table-column prop="SoDienThoai" label="Address" />
+    <el-table-column prop="ChucVu" label="Chức vụ" width="180" />
+    <el-table-column prop="DiaChi" label="Địa chỉ" />
+    <el-table-column prop="SoDienThoai" label="Số điện thoại" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="scope">
         <el-popconfirm
@@ -66,6 +67,7 @@
 import DialogStaff from "@/components/ManageStaff/DialogStaff.vue";
 import staffService from "@/services/staff.service";
 import { Delete, Edit, Search } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
 import { onMounted, reactive, ref, watch } from "vue";
 
 const dialogFormVisible = ref(false);
@@ -113,16 +115,31 @@ onMounted(() => {
   fetchData();
 });
 const handleCreate = async (data) => {
-  await staffService.create(data);
-  fetchData();
+  try {
+    await staffService.create(data);
+    fetchData();
+    ElMessage.success("Tạo nhân viên thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Thêm thất bại");
+  }
 };
 const handleUpdate = async (data) => {
-  await staffService.update(data);
-  fetchData();
+  try {
+    await staffService.update(data);
+    fetchData();
+    ElMessage.success("Cập nhật thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Cập nhật thất bại");
+  }
 };
 const handleDelete = async (data) => {
-  await staffService.delete(data._id);
-  fetchData();
+  try {
+    await staffService.delete(data._id);
+    fetchData();
+    ElMessage.success("Xóa nhân viên thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Xóa thất bại");
+  }
 };
 </script>
 <style scoped>

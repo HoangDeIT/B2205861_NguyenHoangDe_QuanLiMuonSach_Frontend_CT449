@@ -25,7 +25,18 @@ class DocGiaService {
         const res = await this.api.delete(`/${id}`);
         return res.data;
     }
-
+    async getByProfileUser() {
+        const res = await this.api.get("/user")
+        return res.data
+    }
+    async updateByUser(data) {
+        const res = await this.api.put("/user", data)
+        return res.data
+    }
+    async changePassword(data) {
+        const res = await this.api.put("/user/change-password", data)
+        return res.data
+    }
 }
 
 export default new DocGiaService();

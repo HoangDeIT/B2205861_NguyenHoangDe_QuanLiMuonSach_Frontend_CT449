@@ -7,10 +7,10 @@
     @select="handleSelect"
   >
     <el-menu-item index="0">
-      <img style="width: 100px" src="/src/assets/logo.svg" alt="Element logo" />
+      <img style="width: 100px" src="/src/assets/ctu.png" alt="Element logo" />
     </el-menu-item>
     <el-menu-item index="0">
-      <h1>Welcome</h1>
+      <h1>Quản trị cho thuê sách</h1>
     </el-menu-item>
     <el-sub-menu index="1">
       <template #title>

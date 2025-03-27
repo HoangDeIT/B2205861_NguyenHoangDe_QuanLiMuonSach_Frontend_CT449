@@ -15,53 +15,24 @@
           <el-tag type="warning" v-else>Chưa</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Tra sach" prop="NGAYTRA">
-        <template #default="scope">
-          <el-popconfirm @confirm="handleTraSach(scope.row)" title="Trả sách?">
-            <template #reference>
-              <el-button type="primary" round v-if="!scope.row.NGAYTRA"
-                >Tra sach</el-button
-              >
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
     </el-table>
   </el-dialog>
 </template>
 <script setup>
 import TheoDoiMuonSachService from "@/services/theoDoiMuonSach.service";
-import { ElMessage } from "element-plus";
 import { reactive, ref, watchEffect } from "vue";
 const emit = defineEmits(["closeDialog"]);
 const props = defineProps({
   dialogFormVisible: Boolean,
-  idDocGia: Number,
 });
 const data = reactive({});
 const fetchData = async () => {
-  const res = await TheoDoiMuonSachService.getDocGiaById(props.idDocGia);
+  const res = await TheoDoiMuonSachService.chiTietMuonSachByUser();
   data.value = res;
 };
-const handleTraSach = async (id) => {
-  try {
-    await TheoDoiMuonSachService.postTraSach(id._id);
-    ElMessage.success("Trả sách thành công!");
-    fetchData();
-  } catch (error) {
-    ElMessage.error(error.response.data.message || "Lỗi trả sách thất bại!");
-  }
-};
 watchEffect(() => {
-  if (props.idDocGia) {
-    fetchData();
-  }
   if (props.dialogFormVisible) {
-    //pass
+    fetchData();
   }
 });
-
-const handleClose = () => {
-  // Handle dialog close event
-};
 </script>

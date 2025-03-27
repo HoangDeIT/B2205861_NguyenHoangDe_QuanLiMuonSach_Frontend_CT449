@@ -9,36 +9,17 @@
         text-color="#black"
         @open="handleOpen"
         @close="handleClose"
-        style="height: 100vh"
+        style="min-height: 85vh"
       >
-        <router-link to="/" class="link">
-          <el-menu-item class="el-menu-item">
-            <el-icon><setting /></el-icon>
-            <span>Quan li nhan vien</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/sach" class="link">
-          <el-menu-item class="el-menu-item">
-            <el-icon><setting /></el-icon>
-            <span>Quan li sach</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/doc-gia" class="link">
-          <el-menu-item class="el-menu-item">
-            <el-icon><setting /></el-icon>
-            <span>Quan li doc gia</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/nxb" class="link">
-          <el-menu-item class="el-menu-item">
-            <el-icon><setting /></el-icon>
-            <span>Quan li nha xuat ban</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/theo-doi-muon-sach" class="link">
-          <el-menu-item class="el-menu-item">
-            <el-icon><setting /></el-icon>
-            <span>Quan li theo doi muon sach</span>
+        <router-link
+          v-for="item in menuItems"
+          :key="item.path"
+          :to="item.path"
+          class="link"
+        >
+          <el-menu-item :class="{ active: currentPath === item.path }">
+            <el-icon><component :is="item.icon" /></el-icon>
+            <span>{{ item.label }}</span>
           </el-menu-item>
         </router-link>
       </el-menu>
@@ -53,9 +34,28 @@ import {
   Location,
   Setting,
 } from "@element-plus/icons-vue";
+const menuItems = [
+  { path: "/admin", label: "Quản lý nhân viên", icon: Setting },
+  { path: "/admin/sach", label: "Quản lý sách", icon: Setting },
+  { path: "/admin/doc-gia", label: "Quản lý độc giả", icon: Setting },
+  { path: "/admin/nxb", label: "Quản lý nhà xuất bản", icon: Setting },
+  {
+    path: "/admin/theo-doi-muon-sach",
+    label: "Theo dõi mượn sách",
+    icon: Setting,
+  },
+];
+import { ref, watch, watchEffect } from "vue";
+import { useRoute } from "vue-router";
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
+const route = useRoute();
+const currentPath = ref(route.path);
+watchEffect(() => {
+  currentPath.value = route.path;
+});
+
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
@@ -71,5 +71,8 @@ const handleClose = (key: string, keyPath: string[]) => {
 }
 .link {
   text-decoration: none !important;
+}
+.active {
+  background-color: thistle;
 }
 </style>

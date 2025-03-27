@@ -6,19 +6,21 @@
       </el-header>
       <el-container>
         <el-aside>
-          <Sitebar></Sitebar>
+          <Sidebar></Sidebar>
         </el-aside>
         <el-container>
           <el-main>
-            <router-view />
+            <router-view></router-view>
           </el-main>
-          <el-footer>Footer</el-footer>
         </el-container>
       </el-container>
     </el-container>
+
+    <Footer></Footer>
   </div>
 </template>
 <script setup>
 import Header from "@/components/Header.vue";
-import Sitebar from "@/components/Sidebar.vue";
+import Sidebar from "@/components/Sidebar.vue";
+import Footer from "@/components/Footer.vue";
 </script>

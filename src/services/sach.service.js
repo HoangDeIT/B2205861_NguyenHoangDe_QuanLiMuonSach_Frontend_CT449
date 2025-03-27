@@ -5,17 +5,24 @@ class SachService {
         this.api = createApiClient("/api/v1/sach");
     }
 
-    async getAll(page, limit, search) {
-        const res = await this.api.get("/", { params: { page, limit, search } });
+    async getAll(page, limit, search, MANXB, sort) {
+        const res = await this.api.get("/", { params: { page, limit, search, MANXB, sort } });
         return res.data;
     }
 
     async create(data) {
+        if (data.DONGIA) {
+            data.DONGIA = parseInt(data.DONGIA)
+        }
         const res = await this.api.post("/", data);
         return res.data;
     }
 
+
     async update(data) {
+        if (data.DONGIA) {
+            data.DONGIA = parseInt(data.DONGIA)
+        }
         const res = await this.api.put("/", data);
         return res.data;
     }

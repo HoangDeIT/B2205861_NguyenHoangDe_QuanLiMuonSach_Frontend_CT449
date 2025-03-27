@@ -124,7 +124,12 @@ watchEffect(() => {
     ruleForm.NAMXUATBAN = props.sach.NAMXUATBAN || "";
     ruleForm.MANXB = props.sach.MANXB || "";
     ruleForm.NGUONGOC_TACGIA = props.sach.NGUONGOC_TACGIA || "";
-    if (props.sach.IMAGEURL.length > 0)
+    selectedNXB.value =
+      danhSachNXB.value[
+        danhSachNXB.value.findIndex((d) => d.MANXB === props.sach.MANXB)
+      ]?.TENNXB;
+    danhSachNXB.value.map((d) => console.log(d.MANXB));
+    if (props?.sach?.IMAGEURL && props.sach.IMAGEURL.length > 0)
       imageUrl.value = props?.sach?.IMAGEURL || "";
     else imageUrl.value = null;
     // Kiểm tra khi props.dialogFormVisible thay đổi
@@ -147,7 +152,7 @@ const querySearch = (queryString, cb) => {
     )
     .map((nxb) => ({
       value: nxb.TENNXB, // Hiển thị tên NXB
-      MANXB: nxb._id, // Lưu mã NXB
+      MANXB: nxb.MANXB, // Lưu mã NXB
     }));
   cb(results);
 };

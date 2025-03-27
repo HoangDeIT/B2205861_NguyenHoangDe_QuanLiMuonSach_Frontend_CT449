@@ -14,6 +14,7 @@
   </el-input>
 
   <el-table :data="data.value" border style="width: 100%">
+    <el-table-column prop="MASACH" label="Mã sách" width="90" />
     <el-table-column prop="TENSACH" label="Tên sách" width="180" />
     <el-table-column prop="DONGIA" label="Đơn giá" width="100" />
     <el-table-column prop="SOQUYEN" label="Số quyển" width="100" />
@@ -21,7 +22,7 @@
     <el-table-column label="Mã NXB" width="120">
       <template #default="{ row }">
         {{
-          danhSachNXB.find((nxb) => nxb._id === row.MANXB)?.TENNXB ||
+          danhSachNXB.find((nxb) => nxb.MANXB === row.MANXB)?.TENNXB ||
           "Không xác định"
         }}
       </template>
@@ -78,6 +79,7 @@ import { Delete, Edit, Search } from "@element-plus/icons-vue";
 import DialogSach from "@/components/ManageSach/DialogSach.vue";
 import SachService from "@/services/sach.service";
 import nhaXuatBanService from "@/services/nhaXuatBan.service";
+import { ElMessage } from "element-plus";
 
 const data = reactive({ value: [] });
 const total = ref(0);
@@ -128,18 +130,33 @@ function handleOpenUpdate(row) {
 }
 
 async function handleCreate(payload) {
-  await SachService.create(payload);
-  fetchData();
+  try {
+    await SachService.create(payload);
+    fetchData();
+    ElMessage.success("Tạo thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Tạo thất bại");
+  }
 }
 
 async function handleUpdate(payload) {
-  await SachService.update(payload);
-  fetchData();
+  try {
+    await SachService.update(payload);
+    fetchData();
+    ElMessage.success("Cập nhật thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "Cập nhật thất bại");
+  }
 }
 
 async function handleDelete(row) {
-  await SachService.delete(row._id);
-  fetchData();
+  try {
+    await SachService.delete(row._id);
+    fetchData();
+    ElMessage.success("Xóa thành công");
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || "xóa thất bại");
+  }
 }
 
 onMounted(fetchData);
