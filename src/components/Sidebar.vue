@@ -27,7 +27,7 @@
   </el-row>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import {
   Document,
   Menu as IconMenu,
@@ -47,7 +47,7 @@ const menuItems = [
 ];
 import { ref, watch, watchEffect } from "vue";
 import { useRoute } from "vue-router";
-const handleOpen = (key: string, keyPath: string[]) => {
+const handleOpen = (key, keyPath) => {
   console.log(key, keyPath);
 };
 const route = useRoute();
@@ -56,7 +56,7 @@ watchEffect(() => {
   currentPath.value = route.path;
 });
 
-const handleClose = (key: string, keyPath: string[]) => {
+const handleClose = (key, keyPath) => {
   console.log(key, keyPath);
 };
 </script>

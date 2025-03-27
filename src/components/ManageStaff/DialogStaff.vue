@@ -48,7 +48,7 @@
     </template>
   </el-dialog>
 </template>
-<script lang="ts" setup>
+<script  setup>
 const props = defineProps({
   dialogFormVisible: {
     type: Boolean,
@@ -60,10 +60,9 @@ const props = defineProps({
   },
 });
 import { reactive, ref, watch, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
 const emit = defineEmits(["closeDialog", "nhanVienCreated", "nhanVienUpdated"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   _id: "",
   HoTenNV: "",
@@ -97,7 +96,7 @@ watchEffect(() => {
     //pass
     // rules;
   }
-  rules = reactive<FormRules<typeof ruleForm>>({
+  rules = reactive({
     HoTenNV: [
       { required: true, message: "Vui lòng nhập họ tên", trigger: "blur" },
     ],
@@ -109,7 +108,11 @@ watchEffect(() => {
       },
     ],
     ChucVu: [
-      { required: true, message: "Vui lòng chọn chức vụ", trigger: "change" },
+      {
+        required: true,
+        message: "Vui lòng chọn chức vụ",
+        trigger: "change",
+      },
     ],
     DiaChi: [
       { required: true, message: "Vui lòng nhập địa chỉ", trigger: "blur" },
@@ -123,7 +126,7 @@ const handleClose = () => {
   emit("closeDialog");
   resetForm(ruleFormRef.value);
 };
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm = async (formEl) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
@@ -135,7 +138,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   });
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };

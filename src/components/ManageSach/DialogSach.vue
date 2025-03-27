@@ -75,12 +75,11 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
-import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
 import nhaXuatBanService from "@/services/nhaXuatBan.service";
-import { da } from "element-plus/es/locale";
-import type { UploadProps } from "element-plus";
+
 import { Plus } from "@element-plus/icons-vue";
 
 const props = defineProps({
@@ -91,7 +90,7 @@ const props = defineProps({
 const emit = defineEmits(["closeDialog", "created", "updated"]);
 const selectedNXB = ref(""); // Hiển thị tên NXB
 const danhSachNXB = ref([]); // Lưu danh sách NXB
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const imageUrl = ref("");
 
 const ruleForm = reactive({
@@ -156,7 +155,7 @@ const querySearch = (queryString, cb) => {
     }));
   cb(results);
 };
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   TENSACH: [
     { required: true, message: "Vui lòng nhập Tên sách", trigger: "blur" },
   ],
@@ -169,11 +168,11 @@ function handleClose() {
   emit("closeDialog");
 }
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
@@ -186,16 +185,13 @@ function submitForm(formEl: FormInstance | undefined) {
 }
 
 //img
-const handleAvatarSuccess: UploadProps["onSuccess"] = (
-  response,
-  uploadFile
-) => {
+const handleAvatarSuccess = (response, uploadFile) => {
   imageUrl.value = response.imageUrl;
 };
 const removeImage = () => {
   imageUrl.value = "";
 };
-const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
+const beforeAvatarUpload = (rawFile) => {
   if (
     rawFile.type !== "image/jpeg" &&
     rawFile.type !== "image/jpg" &&

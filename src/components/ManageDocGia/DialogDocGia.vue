@@ -68,9 +68,8 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
 
 const props = defineProps({
   dialogFormVisible: Boolean,
@@ -79,7 +78,7 @@ const props = defineProps({
 
 const emit = defineEmits(["closeDialog", "created", "updated"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   _id: "",
   HOLOT: "",
@@ -91,15 +90,14 @@ const ruleForm = reactive({
   Password: "",
   MADOCGIA: "",
 });
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   HOLOT: [{ required: true, message: "Vui lòng nhập Họ lót", trigger: "blur" }],
   TEN: [{ required: true, message: "Vui lòng nhập Tên", trigger: "blur" }],
   DIENTHOAI: [{ required: true, message: "Vui lòng nhập ĐT", trigger: "blur" }],
-
   // ... Thêm các rule khác nếu cần
 });
 
@@ -132,7 +130,7 @@ function handleClose() {
   emit("closeDialog");
 }
 
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {

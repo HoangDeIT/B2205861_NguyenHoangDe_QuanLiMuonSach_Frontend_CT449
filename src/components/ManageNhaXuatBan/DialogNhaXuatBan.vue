@@ -37,9 +37,8 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
 
 const props = defineProps({
   dialogFormVisible: Boolean,
@@ -48,7 +47,7 @@ const props = defineProps({
 
 const emit = defineEmits(["closeDialog", "created", "updated"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   _id: "",
   TENNXB: "",
@@ -67,7 +66,7 @@ watchEffect(() => {
   }
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   TENNXB: [
     { required: true, message: "Vui lòng nhập Tên NXB", trigger: "blur" },
   ],
@@ -81,11 +80,11 @@ function handleClose() {
   emit("closeDialog");
 }
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {

@@ -38,7 +38,7 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import theoDoiMuonSachService from "@/services/theoDoiMuonSach.service";
 import { ElNotification } from "element-plus";
 const props = defineProps({

@@ -60,13 +60,9 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { reactive, ref, watchEffect } from "vue";
-import {
-  ElNotification,
-  type FormInstance,
-  type FormRules,
-} from "element-plus";
+import { ElNotification } from "element-plus";
 import docGiaService from "@/services/docGia.service";
 
 const props = defineProps({
@@ -81,7 +77,7 @@ const open1 = () => {
 };
 const emit = defineEmits(["closeDialog"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   _id: "",
   HOLOT: "",
@@ -92,7 +88,7 @@ const ruleForm = reactive({
   DIENTHOAI: "",
   MADOCGIA: "",
 });
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };
@@ -115,7 +111,7 @@ watchEffect(() => {
   }
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   HOLOT: [{ required: true, message: "Vui lòng nhập Họ lót", trigger: "blur" }],
   TEN: [{ required: true, message: "Vui lòng nhập Tên", trigger: "blur" }],
   DIENTHOAI: [{ required: true, message: "Vui lòng nhập ĐT", trigger: "blur" }],
@@ -127,7 +123,7 @@ function handleClose() {
   emit("closeDialog");
 }
 
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {

@@ -47,18 +47,13 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref } from "vue";
-import {
-  ElNotification,
-  type FormInstance,
-  type FormRules,
-} from "element-plus";
+import { ElNotification } from "element-plus";
 import AuthService from "../services/auth.service";
 import { useAuthStore } from "@/stores/counter";
-import { ca } from "element-plus/es/locale";
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 
 const { login, access_token } = useAuthStore();
 const open1 = () => {
@@ -75,7 +70,7 @@ const open4 = (data = "Something went wrong") => {
     type: "error",
   });
 };
-const validatePass = (rule: any, value: any, callback: any) => {
+const validatePass = (rule, value, callback) => {
   if (value === "") {
     callback(new Error("Please input the password"));
   } else {
@@ -93,12 +88,12 @@ const ruleForm = reactive({
   type: "user",
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   pass: [{ validator: validatePass, trigger: "blur" }],
   MANV: [{ required: true, trigger: "blur" }],
 });
 
-const submitForm = (formEl: FormInstance | undefined) => {
+const submitForm = (formEl) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
@@ -125,7 +120,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
         }
       }
       if (res.access_token) {
-        open1();
+        open1("Đăng nhập thành công");
       } else {
         open4(res.message);
       }
@@ -135,7 +130,7 @@ const submitForm = (formEl: FormInstance | undefined) => {
   });
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };

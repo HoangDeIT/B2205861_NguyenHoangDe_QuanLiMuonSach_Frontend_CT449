@@ -70,18 +70,14 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref } from "vue";
-import {
-  ElNotification,
-  type FormInstance,
-  type FormRules,
-} from "element-plus";
+import { ElNotification } from "element-plus";
 import AuthService from "../services/auth.service";
 import { useLocalStorage } from "@vueuse/core";
 import router from "@/router";
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 
 const open1 = (data = "Success") => {
   ElNotification({
@@ -109,7 +105,7 @@ const ruleForm = reactive({
   checkPass: "",
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   HOLOT: [{ required: true, message: "Vui lòng nhập Họ lót", trigger: "blur" }],
   TEN: [{ required: true, message: "Vui lòng nhập Tên", trigger: "blur" }],
   NGAYSINH: [
@@ -129,13 +125,21 @@ const rules = reactive<FormRules<typeof ruleForm>>({
     { required: true, message: "Vui lòng nhập Địa chỉ", trigger: "blur" },
   ],
   DIENTHOAI: [
-    { required: true, message: "Vui lòng nhập Điện thoại", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập Điện thoại",
+      trigger: "blur",
+    },
   ],
   Password: [
     { required: true, message: "Vui lòng nhập Password", trigger: "blur" },
   ],
   checkPass: [
-    { required: true, message: "Vui lòng nhập lại Password", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập lại Password",
+      trigger: "blur",
+    },
     {
       validator: (rule, value, callback) => {
         if (value !== ruleForm.Password) {
@@ -149,7 +153,7 @@ const rules = reactive<FormRules<typeof ruleForm>>({
   ],
 });
 
-const registerUser = async (formEl: FormInstance | undefined) => {
+const registerUser = async (formEl) => {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {
@@ -175,7 +179,7 @@ const registerUser = async (formEl: FormInstance | undefined) => {
   });
 };
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl) => {
   if (!formEl) return;
   formEl.resetFields();
 };

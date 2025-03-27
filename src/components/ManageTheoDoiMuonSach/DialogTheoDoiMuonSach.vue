@@ -51,9 +51,8 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref, watchEffect } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
 
 const props = defineProps({
   dialogFormVisible: Boolean,
@@ -62,7 +61,7 @@ const props = defineProps({
 
 const emit = defineEmits(["closeDialog", "created", "updated"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   _id: "",
   MADOCGIA: "",
@@ -81,21 +80,30 @@ watchEffect(() => {
   }
 });
 
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   MADOCGIA: [
-    { required: true, message: "Vui lòng nhập Mã Độc Giả", trigger: "blur" },
+    {
+      required: true,
+      message: "Vui lòng nhập Mã Độc Giả",
+      trigger: "blur",
+    },
   ],
   MASACH: [
     { required: true, message: "Vui lòng nhập Mã Sách", trigger: "blur" },
   ],
-  // ... Thêm rule cho ngày mượn/trả nếu cần
+  NGAYMUON: [
+    { required: true, message: "Vui lòng chọn Ngày mượn", trigger: "change" },
+  ],
+  NGAYTRA: [
+    { required: true, message: "Vui lòng chọn Ngày trả", trigger: "change" },
+  ],
 });
 
 function handleClose() {
   emit("closeDialog");
 }
 
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {

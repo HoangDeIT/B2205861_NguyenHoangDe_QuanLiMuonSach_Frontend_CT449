@@ -51,9 +51,9 @@
   </el-dialog>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
-import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import { ElMessage } from "element-plus";
 import sachService from "@/services/sach.service";
 import theoDoiMuonSachService from "@/services/theoDoiMuonSach.service";
 
@@ -64,7 +64,7 @@ const props = defineProps({
 
 const emit = defineEmits(["closeDialog", "created", "updated"]);
 
-const ruleFormRef = ref<FormInstance>();
+const ruleFormRef = ref();
 const ruleForm = reactive({
   MADOCGIA: "",
   MASACH: "",
@@ -99,7 +99,7 @@ const handleSelectSach = (item) => {
   ruleForm.MASACH = item.MASACH; // Lưu mã sách
   selectedSach.value = item.value; // Hiển thị tên sách
 };
-const rules = reactive<FormRules<typeof ruleForm>>({
+const rules = reactive({
   MASACH: [
     { required: true, message: "Vui lòng nhập Mã Sách", trigger: "blur" },
   ],
@@ -110,7 +110,7 @@ function handleClose() {
   emit("closeDialog");
 }
 
-function submitForm(formEl: FormInstance | undefined) {
+function submitForm(formEl) {
   if (!formEl) return;
   formEl.validate(async (valid) => {
     if (valid) {

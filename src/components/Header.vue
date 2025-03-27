@@ -7,7 +7,7 @@
     @select="handleSelect"
   >
     <el-menu-item index="0">
-      <img style="width: 100px" src="/src/assets/ctu.png" alt="Element logo" />
+      <img @click="router.push('/')" class="logo" style="width: 100px" src="/src/assets/ctu.png" alt="Element logo" />
     </el-menu-item>
     <el-menu-item index="0">
       <h1>Quản trị cho thuê sách</h1>
@@ -26,12 +26,13 @@
   </el-menu>
 </template>
 
-<script lang="ts" setup>
+<script setup>
+import router from "@/router";
 import { useAuthStore } from "@/stores/counter";
 import { ref } from "vue";
 const {logout}=useAuthStore();
 const activeIndex = ref("1");
-const handleSelect = (key: string, keyPath: string[]) => {
+const handleSelect = (key, keyPath) => {
   console.log(key, keyPath);
 };
 

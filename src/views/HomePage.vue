@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import DialogMuonSach from "@/components/HomePage/DialogMuonSach.vue";
 import DialogChiTietMuonSach from "@/components/HomePage/DialogChiTietMuonSach.vue";
 import DialogChangePassword from "@/components/HomePage/DialogChangePassword.vue";
@@ -211,7 +211,7 @@ function setPage(page) {
               <div>
                 <p>Số quyển: {{ item.SOQUYEN }}</p>
                 <p>Năm xuất bản: {{ item.NAMXUATBAN }}</p>
-                <p>Gía tiền : {{ item.DONGIA }}</p>
+                <p>Giá tiền : {{ item.DONGIA }}</p>
                 <p>Tác giả : {{ item.NGUONGOC_TACGIA }}</p>
               </div>
               <img
